@@ -42,7 +42,11 @@ object App {
             info("Charset: " + Charset.defaultCharset())
             info("API Version: " + APIMedia.VERSION)
 
-            val apiServer = ApiServer(RequestFactory(jarFile, File("").absolutePath + "\\CampfireServerMedia\\src\\main\\java"),
+
+            val requestFactory = RequestFactory(jarFile, File("").absolutePath + "\\CampfireServerMedia\\src\\main\\java")
+
+            val apiServer = ApiServer(
+                    requestFactory,
                     AccountProviderImpl(),
                     ToolsFiles.readFile(keyFileJKS),
                     ToolsFiles.readFile(keyFileBKS),
