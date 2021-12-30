@@ -32,7 +32,7 @@ object App {
 
         val keyFileJKS = File("secrets/Certificate.jks")
         val keyFileBKS = File("secrets/Certificate.bks")
-        val jarFile = "${patchPrefix}CampfireServer.jar"
+        val jarFile = "${patchPrefix}CampfireServerMedia.jar"
 
         val botTokensList = ToolsFiles.readListOrNull("secrets/BotsTokens.txt")?:ArrayList()
 
