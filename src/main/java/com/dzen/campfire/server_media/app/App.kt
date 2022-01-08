@@ -5,7 +5,7 @@ import com.dzen.campfire.api.tools.server.ApiServer
 import com.dzen.campfire.api.tools.server.RequestFactory
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.debug.info
-import com.sup.dev.java.libs.debug.log
+import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsDate
 import com.sup.dev.java.tools.ToolsFiles
 import com.sup.dev.java.tools.ToolsThreads
@@ -16,25 +16,26 @@ import java.nio.charset.Charset
 
 object App {
 
-    val test = (ToolsFiles.readLineOrNull(File("secrets/Config.txt"), 0)?:"")!="release"
+    val secrets = Json(ToolsFiles.readString("secrets/Secrets.json"))
+    val secretsBotsTokens = secrets.getStrings("bots_tokens")!!.map { it?:"" }.toTypedArray()
+    val secretsConfig = secrets.getJson("config")!!
+    val secretsKeys = secrets.getJson("keys")!!
+    val test = secretsConfig.getString("build_type")!="release"
 
     @JvmStatic
     fun main(args: Array<String>) {
 
-        val patchPrefix = ToolsFiles.readLineOrNull(File("secrets/Config.txt"), 1)?:""
-        val databaseLogin = ToolsFiles.readLineOrNull(File("secrets/Config.txt"), 6)?:""
-        val databasePassword = ToolsFiles.readLineOrNull(File("secrets/Config.txt"), 7)?:""
-        val databaseName = ToolsFiles.readLineOrNull(File("secrets/Config.txt"), 8)?:""
-        val databaseAddress = ToolsFiles.readLineOrNull(File("secrets/Config.txt"), 9)?:""
+        val patchPrefix = secretsConfig.getString("patch_prefix")
+        val databaseLogin = secretsConfig.getString("database_media_login")
+        val databasePassword = secretsConfig.getString("database_media_password")
+        val databaseName = secretsConfig.getString("database_media_name")
+        val databaseAddress = secretsConfig.getString("database_media_address")
 
-        val keysFile = File("secrets/Keys.txt")
-        val jksPassword = ToolsFiles.readLineOrNull(keysFile, 3)?:""
+        val jksPassword = secretsKeys.getString("jks_password")
 
         val keyFileJKS = File("secrets/Certificate.jks")
         val keyFileBKS = File("secrets/Certificate.bks")
         val jarFile = "${patchPrefix}CampfireServerMedia.jar"
-
-        val botTokensList = ToolsFiles.readListOrNull("secrets/BotsTokens.txt")?:ArrayList()
 
         try {
             info("Sayzen Studio")
@@ -54,7 +55,7 @@ object App {
                     APIMedia.PORT_HTTPS,
                     APIMedia.PORT_HTTP,
                     APIMedia.PORT_CERTIFICATE,
-                    botTokensList,
+                    secretsBotsTokens,
             )
 
             while (true) {
