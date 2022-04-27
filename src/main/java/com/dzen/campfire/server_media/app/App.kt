@@ -1,8 +1,8 @@
 package com.dzen.campfire.server_media.app
 
-import com.dzen.campfire.api_media.APIMedia
 import com.dzen.campfire.api.tools.server.ApiServer
 import com.dzen.campfire.api.tools.server.RequestFactory
+import com.dzen.campfire.api_media.APIMedia
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.debug.info
 import com.sup.dev.java.libs.json.Json
@@ -60,7 +60,8 @@ object App {
 
             while (true) {
                 try {
-                    Database.setGlobal(DatabasePool(databaseLogin, databasePassword, databaseName, databaseAddress, if(test) 1 else 8) { key, time -> })
+                    Database.setGlobal(DatabasePool(databaseLogin, databasePassword, databaseName,
+                        databaseAddress, if(test) 1 else 8, oldMysql = true) { key, time -> })
                     break
                 } catch (ex: Exception) {
                     ex.printStackTrace()
