@@ -21,7 +21,7 @@ class EResourcesGet : RResourcesGet(0, "") {
 
         if (v.isEmpty) throw  ApiException(APIMedia.ERROR_GONE).salient()
 
-        val correctPwd = v.next<String?>()
+        val correctPwd = v.nextMayNull<String>()
         if (!correctPwd.isNullOrEmpty()) if (correctPwd != pwd) throw ApiException(APIMedia.ERROR_ACCESS)
 
         return Response(v.next())
